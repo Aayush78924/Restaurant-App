@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "555659706519",
+    "project_id": "health-do",
+    "storage_bucket": "health-do.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555659706519:android:26e90583879195ccd2a9d2",
+        "android_client_info": {
+          "package_name": "com.example.temp1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555659706519-2gh3ghh79mmebvbr6g4qa5blao4bi3pv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP9w5xgPrleU39gj5kuDgQSnBG6S06rx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555659706519-2gh3ghh79mmebvbr6g4qa5blao4bi3pv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
