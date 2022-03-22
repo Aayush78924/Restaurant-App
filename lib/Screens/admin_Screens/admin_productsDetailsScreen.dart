@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temp1/Screens/admin_homeScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_homeScreen.dart';
 import 'package:temp1/Screens/home_Screen.dart';
 import 'package:temp1/Screens/order_DetailsScreen.dart';
 

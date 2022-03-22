@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
+import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temp1/Screens/home_Screen.dart';
 import 'package:temp1/Screens/profile_DetailsScreen.dart';
@@ -42,10 +43,158 @@ class _order_ScreenState extends State<order_Screen> {
     return 1;
   }
 
+  late var _razorpay;
+  var amountController = TextEditingController();
+  int price_int = 0;
   @override
   void initState() {
-    super.initState();
+    _razorpay = Razorpay();
+    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     getSharedPrefs();
+    super.initState();
+  }
+
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
+    List favourites_list = (cart.split(",").toList());
+    int j = 0;
+    for (int i = 0; i < favourites_list.length; i++) {
+      if (favourites_list[i] == "length") {
+        favourites_list[i - 1] = count[j];
+        j = j + 1;
+      }
+    }
+    String order_admin = favourites_list.join(",");
+    print(order_admin);
+    String count_order = "";
+    int total_number_of_items = 0;
+    for (int i = 0; i < name.length; i++) {
+      total_number_of_items = total_number_of_items + int.parse(count[i]);
+    }
+    String cart_customer = "1,${total_number_of_items}";
+
+    print(count);
+    for (int i = 0; i < name.length; i++) {
+      cart_customer = cart_customer + "," + count[i] + "," + name[i];
+      int price_Arr = int.parse(price[i]);
+      int count_arr = int.parse(count[i]);
+      price_int = price_int + (price_Arr * count_arr);
+    }
+    var now = DateTime.now();
+    print(DateFormat.yMMMMd().format(now));
+    cart_customer = cart_customer +
+        "," +
+        price_int.toString() +
+        ",A D D R E S S" +
+        "," +
+        DateFormat.yMMMMd().format(now).toString();
+    print(price_int);
+    print(cart_customer);
+    print("Payment Done");
+    await FirebaseFirestore.instance
+        .collection("customers")
+        .doc(doc_id_)
+        .get()
+        .then((value) {
+      count_order = value['count'];
+    });
+    count_order = (int.parse(count_order) + 1).toString();
+    await FirebaseFirestore.instance
+        .collection("customers")
+        .doc(doc_id_)
+        .update({
+      'order$count_order': cart_customer,
+      'count': count_order,
+    });
+    print("no of orders");
+    int no_of_orders_admin = 0;
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc('count')
+        .get()
+        .then((value) => no_of_orders_admin = (int.parse(value['count']) + 1));
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc('Order_$no_of_orders_admin')
+        .set({
+      'details': order_admin,
+      'price': price_int,
+      'customer_id': doc_id_,
+      'order_count': count_order,
+      'count': total_number_of_items,
+      'status': "1",
+      'customer_name': widget.name,
+      'customer_address': widget.address,
+      'customer_phone': widget.phone_number,
+      'date': DateFormat.yMMMMd().format(now).toString(),
+    });
+    await FirebaseFirestore.instance
+        .collection("orders")
+        .doc('count')
+        .update({'count': no_of_orders_admin.toString()});
+    await FirebaseFirestore.instance
+        .collection("customers")
+        .doc(doc_id_)
+        .update({'cart': ""});
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => MyHomePage()));
+  }
+
+  void _handlePaymentError(PaymentFailureResponse response) {
+    print("Payment Fail");
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Error',
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold),
+            ),
+            content: Text(
+              'Payment fail try again',
+              style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.height * 0.025,
+                  color: Colors.grey,
+                  fontWeight: FontWeight.w500),
+            ),
+            actions: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.05,
+                  width: MediaQuery.of(context).size.width * 0.15,
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(136, 148, 110, 1),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  child: Center(
+                    child: InkWell(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        setState(() {});
+                      },
+                      child: Text(
+                        'Ok',
+                        style: TextStyle(
+                            fontSize:
+                                MediaQuery.of(context).size.height * 0.025,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
+  void _handleExternalWallet(ExternalWalletResponse response) {
+    // Do something when an external wallet is selected
   }
 
   @override
@@ -424,112 +573,142 @@ class _order_ScreenState extends State<order_Screen> {
                                   child: Center(
                                     child: InkWell(
                                       onTap: () async {
-                                        List favourites_list =
-                                            (cart.split(",").toList());
-                                        int j = 0;
-                                        for (int i = 0;
-                                            i < favourites_list.length;
-                                            i++) {
-                                          if (favourites_list[i] == "length") {
-                                            favourites_list[i - 1] = count[j];
-                                            j = j + 1;
-                                          }
-                                        }
-                                        String order_admin =
-                                            favourites_list.join(",");
-                                        print(order_admin);
-                                        String count_order = "";
-                                        int total_number_of_items = 0;
                                         for (int i = 0; i < name.length; i++) {
-                                          total_number_of_items =
-                                              total_number_of_items +
-                                                  int.parse(count[i]);
-                                        }
-                                        String cart_customer =
-                                            "1,${total_number_of_items}";
-                                        int price_int = 0;
-                                        print(count);
-                                        for (int i = 0; i < name.length; i++) {
-                                          cart_customer = cart_customer +
-                                              "," +
-                                              count[i] +
-                                              "," +
-                                              name[i];
                                           int price_Arr = int.parse(price[i]);
                                           int count_arr = int.parse(count[i]);
                                           price_int = price_int +
                                               (price_Arr * count_arr);
                                         }
-                                        var now = DateTime.now();
-                                        print(DateFormat.yMMMMd().format(now));
-                                        cart_customer = cart_customer +
-                                            "," +
-                                            price_int.toString() +
-                                            ",A D D R E S S" +
-                                            "," +
-                                            DateFormat.yMMMMd()
-                                                .format(now)
-                                                .toString();
-                                        print(price_int);
-                                        print(cart_customer);
-                                        await FirebaseFirestore.instance
-                                            .collection("customers")
-                                            .doc(doc_id_)
-                                            .get()
-                                            .then((value) {
-                                          count_order = value['count'];
-                                        });
-                                        count_order =
-                                            (int.parse(count_order) + 1)
-                                                .toString();
-                                        await FirebaseFirestore.instance
-                                            .collection("customers")
-                                            .doc(doc_id_)
-                                            .update({
-                                          'order$count_order': cart_customer,
-                                          'count': count_order,
-                                        });
-                                        print("no of orders");
-                                        int no_of_orders_admin = 0;
-                                        await FirebaseFirestore.instance
-                                            .collection("orders")
-                                            .doc('count')
-                                            .get()
-                                            .then((value) =>
-                                                no_of_orders_admin =
-                                                    (int.parse(value['count']) +
-                                                        1));
-                                        await FirebaseFirestore.instance
-                                            .collection("orders")
-                                            .doc('Order_$no_of_orders_admin')
-                                            .set({
-                                          'details': order_admin,
-                                          'price': price_int,
-                                          'customer_id': doc_id_,
-                                          'order_count': count_order,
-                                          'count': total_number_of_items,
-                                          'status': "1",
-                                          'customer_name': widget.name,
-                                          'customer_address': widget.address,
-                                          'customer_phone': widget.phone_number,
-                                          'date': DateFormat.yMMMMd()
-                                              .format(now)
-                                              .toString(),
-                                        });
-                                        await FirebaseFirestore.instance
-                                            .collection("orders")
-                                            .doc('count')
-                                            .update({
-                                          'count': no_of_orders_admin.toString()
-                                        });
-                                        await FirebaseFirestore.instance
-                                            .collection("customers")
-                                            .doc(doc_id_)
-                                            .update({'cart': ""});
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    MyHomePage()));
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  'ORDER NOW',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.03,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                content: Text(
+                                                  'We provide delivery service only with 10km Greater Imphal ',
+                                                  style: TextStyle(
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.025,
+                                                      color: Colors.grey,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                actions: <Widget>[
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          'Total price: $price_int',
+                                                          style: TextStyle(
+                                                              fontSize: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.03,
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Container(
+                                                          height: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .height *
+                                                              0.05,
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width *
+                                                              0.15,
+                                                          decoration: BoxDecoration(
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      136,
+                                                                      148,
+                                                                      110,
+                                                                      1),
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10))),
+                                                          child: Center(
+                                                            child: InkWell(
+                                                              onTap: () async {
+                                                                var options = {
+                                                                  'key':
+                                                                      "rzp_test_FkHhXA6XaP6led",
+                                                                  // amount will be multiple of 100
+                                                                  'amount': (price_int *
+                                                                          100)
+                                                                      .toString(), //So its pay 500
+                                                                  'name':
+                                                                      'healthdo',
+                                                                  'description':
+                                                                      'Demo',
+                                                                  'timeout':
+                                                                      300, // in seconds
+                                                                  'prefill': {
+                                                                    'contact':
+                                                                        '8787878787',
+                                                                    'email':
+                                                                        'healthdo@gmail.com'
+                                                                  }
+                                                                };
+                                                                _razorpay.open(
+                                                                    options);
+                                                                Navigator.pop(
+                                                                    context);
+                                                                setState(() {});
+                                                              },
+                                                              child: Text(
+                                                                'Ok',
+                                                                style: TextStyle(
+                                                                    fontSize: MediaQuery.of(context)
+                                                                            .size
+                                                                            .height *
+                                                                        0.025,
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              );
+                                            });
                                       },
                                       child: Text(
                                         'Order Now',
@@ -683,5 +862,12 @@ class _order_ScreenState extends State<order_Screen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _razorpay.clear();
+    super.dispose();
   }
 }

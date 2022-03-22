@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temp1/Screens/admin_orderDetailsScreen.dart';
-import 'package:temp1/Screens/admin_homeScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_orderDetailsScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_homeScreen.dart';
 import 'package:temp1/Screens/home_Screen.dart';
 import 'package:temp1/Screens/loading_screen.dart';
 import 'package:temp1/Screens/login_Screen.dart';

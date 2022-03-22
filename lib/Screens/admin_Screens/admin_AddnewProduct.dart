@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:temp1/Screens/admin_homeScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_homeScreen.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';

@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temp1/Screens/admin_AddnewProduct.dart';
-import 'package:temp1/Screens/admin_orderDetailsScreen.dart';
-import 'package:temp1/Screens/admin_productsDetailsScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_AddnewProduct.dart';
+import 'package:temp1/Screens/admin_Screens/admin_orderDetailsScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_productsDetailsScreen.dart';
 import 'package:temp1/Screens/product_DetailsScreen.dart';
 
 class admin_OrderScreen extends StatefulWidget {
@@ -236,9 +236,11 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                         .toString(),
                                                     price: products['price']
                                                         .toString(),
-                                                    order_status:
-                                                        (products['status']-1)
-                                                            .toString(),
+                                                    order_status: (int.parse(
+                                                                products[
+                                                                    'status']) -
+                                                            1)
+                                                        .toString(),
                                                     details: products['details']
                                                         .toString(),
                                                     order_count:

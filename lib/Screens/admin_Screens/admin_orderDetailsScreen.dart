@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:temp1/Screens/admin_homeScreen.dart';
+import 'package:temp1/Screens/admin_Screens/admin_homeScreen.dart';
 
 class admin_OrderDetails_Screen extends StatefulWidget {
   final String address;
