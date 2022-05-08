@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:temp1/Provider/add_ingredients.dart';
 import 'package:temp1/Screens/home_Screen.dart';
 
-class product_Details extends StatefulWidget {
+class product_Details extends ConsumerStatefulWidget {
   final String caloies;
   final String carbs;
   final String dressing;
@@ -27,10 +31,12 @@ class product_Details extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<product_Details> createState() => _product_DetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() {
+    return _product_DetailsState();
+  }
 }
 
-class _product_DetailsState extends State<product_Details> {
+class _product_DetailsState extends ConsumerState<product_Details> {
   var ingredient_add = [];
   _addItem(String item) {
     setState(() {
@@ -49,7 +55,15 @@ class _product_DetailsState extends State<product_Details> {
   @override
   void initState() {
     super.initState();
+    ref.read(addIngredientProvider).clear();
     getSharedPrefs();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    super.dispose();
   }
 
   @override
@@ -60,12 +74,16 @@ class _product_DetailsState extends State<product_Details> {
     }
     TextEditingController _textFieldController = TextEditingController();
     bool empty = false;
+    var itemsingredients = ref.watch(addIngredientProvider);
     return FutureBuilder(
         future: getSharedPrefs(),
         builder: (ctx, snapshot) {
           if (snapshot.data == 1) {
             return SafeArea(
               child: Scaffold(
+                  floatingActionButton: FloatingActionButton(onPressed: () {
+                    ref.read(addIngredientProvider).clear();
+                  }),
                   appBar: AppBar(
                     backgroundColor: const Color.fromRGBO(136, 148, 110, 1),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.08,
@@ -180,7 +198,7 @@ class _product_DetailsState extends State<product_Details> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    showAddDialog(context, ingredients);
+                                    showAddDialog(context, ingredients, ref);
                                   },
                                   child: Icon(
                                     Icons.add_circle_outline_outlined,
@@ -191,6 +209,90 @@ class _product_DetailsState extends State<product_Details> {
                                   ),
                                 )
                               ]),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 16.0, bottom: 8.0, left: 32.0),
+                          child: Container(
+                            child: itemsingredients.ingredients.isEmpty
+                                ? const Text(
+                                    'No ingredients added yet',
+                                  )
+                                : ListView.builder(
+                                    // physics: const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
+                                    itemCount:
+                                        itemsingredients.ingredients.length,
+                                    scrollDirection: Axis.vertical,
+                                    itemBuilder: (BuildContext, index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 10.0,
+                                            top: 16.0,
+                                            bottom: 16.0),
+                                        child: Container(
+                                          child: Row(
+                                            children: [
+                                              CircleAvatar(
+                                                radius: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.01,
+                                                backgroundColor:
+                                                    const Color.fromRGBO(
+                                                        136, 148, 110, 1),
+                                              ),
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.02,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  itemsingredients
+                                                      .ingredients[index],
+                                                  style: TextStyle(
+                                                      overflow:
+                                                          TextOverflow.visible,
+                                                      fontSize:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.025,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.02,
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  ref
+                                                      .read(
+                                                          addIngredientProvider)
+                                                      .removeIngredients(
+                                                          itemsingredients
+                                                                  .ingredients[
+                                                              index]);
+                                                },
+                                                child: const Icon(
+                                                  Icons.delete,
+                                                  color: Color.fromRGBO(
+                                                      136, 148, 110, 1),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                          ),
                         ),
                         Row(
                           children: [
@@ -359,20 +461,37 @@ class _product_DetailsState extends State<product_Details> {
                                                       child: Center(
                                                         child: InkWell(
                                                           onTap: () async {
+                                                            String lenn =
+                                                                (itemsingredients
+                                                                        .ingredients
+                                                                        .length)
+                                                                    .toString();
                                                             String
-                                                                modifyIngredients =
-                                                                ingredients[0];
+                                                                modifyIngredients;
+
+                                                            if (itemsingredients
+                                                                .ingredients
+                                                                .isEmpty) {
+                                                              modifyIngredients =
+                                                                  'none';
+                                                              lenn = "1";
+                                                            } else {
+                                                              modifyIngredients =
+                                                                  itemsingredients
+                                                                      .ingredients[0];
+                                                            }
 
                                                             for (int i = 1;
                                                                 i <
-                                                                    ingredients
+                                                                    itemsingredients
+                                                                        .ingredients
                                                                         .length;
                                                                 i++) {
                                                               modifyIngredients =
                                                                   modifyIngredients +
                                                                       "," +
-                                                                      ingredients[
-                                                                          i];
+                                                                      itemsingredients
+                                                                          .ingredients[i];
                                                             }
                                                             String cart = "";
                                                             await FirebaseFirestore
@@ -400,9 +519,7 @@ class _product_DetailsState extends State<product_Details> {
                                                                   "," +
                                                                   widget.price +
                                                                   ",1,length," +
-                                                                  (ingredients
-                                                                          .length)
-                                                                      .toString() +
+                                                                  lenn +
                                                                   "," +
                                                                   modifyIngredients
                                                             });
@@ -485,51 +602,59 @@ class _product_DetailsState extends State<product_Details> {
   }
 }
 
-Future<dynamic> showAddDialog(BuildContext context, List<String> ingredients) {
+Future<dynamic> showAddDialog(
+    BuildContext context, List<String> ingredients, WidgetRef ref) {
+  var items = ref.watch(addIngredientProvider).ingredients;
   return showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
         content: Container(
-          height: MediaQuery.of(context).size.height * 0.5,
+          height: MediaQuery.of(context).size.height * 0.4,
           width: MediaQuery.of(context).size.width * 0.8,
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               color: Colors.white),
           child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
+              // physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemCount: ingredients.length,
               scrollDirection: Axis.vertical,
               itemBuilder: (BuildContext, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(
-                      left: 64.0, top: 16.0, bottom: 16.0),
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    //color: Color.fromRGBO(136, 148, 110, 1),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: MediaQuery.of(context).size.width * 0.01,
-                          backgroundColor:
-                              const Color.fromRGBO(136, 148, 110, 1),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.02,
-                        ),
-                        Flexible(
-                          child: Text(
-                            ingredients[index],
-                            style: TextStyle(
-                                overflow: TextOverflow.visible,
-                                fontSize:
-                                    MediaQuery.of(context).size.height * 0.025,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500),
+                return GestureDetector(
+                  onTap: () {
+                    ref
+                        .read(addIngredientProvider)
+                        .addIngredients(ingredients[index]);
+                    log(ingredients[index]);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        left: 10.0, top: 16.0, bottom: 16.0),
+                    child: Container(
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: MediaQuery.of(context).size.width * 0.01,
+                            backgroundColor:
+                                const Color.fromRGBO(136, 148, 110, 1),
                           ),
-                        ),
-                      ],
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.02,
+                          ),
+                          Flexible(
+                            child: Text(
+                              ingredients[index],
+                              style: TextStyle(
+                                  overflow: TextOverflow.visible,
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.025,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

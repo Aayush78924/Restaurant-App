@@ -57,72 +57,68 @@ class _order_ScreenState extends State<order_Screen> {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    List favourites_list = (cart.split(",").toList());
+    List favouritesList = (cart.split(",").toList());
     int j = 0;
-    for (int i = 0; i < favourites_list.length; i++) {
-      if (favourites_list[i] == "length") {
-        favourites_list[i - 1] = count[j];
+    for (int i = 0; i < favouritesList.length; i++) {
+      if (favouritesList[i] == "length") {
+        favouritesList[i - 1] = count[j];
         j = j + 1;
       }
     }
-    String order_admin = favourites_list.join(",");
-    print(order_admin);
-    String count_order = "";
-    int total_number_of_items = 0;
+    String orderAdmin = favouritesList.join(",");
+    print(orderAdmin);
+    String countOrder = "";
+    int totalNumberOfItems = 0;
     for (int i = 0; i < name.length; i++) {
-      total_number_of_items = total_number_of_items + int.parse(count[i]);
+      totalNumberOfItems = totalNumberOfItems + int.parse(count[i]);
     }
-    String cart_customer = "1,${total_number_of_items}";
+    String cartCustomer = "1,$totalNumberOfItems";
 
     print(count);
     for (int i = 0; i < name.length; i++) {
-      cart_customer = cart_customer + "," + count[i] + "," + name[i];
-      int price_Arr = int.parse(price[i]);
-      int count_arr = int.parse(count[i]);
-      price_int = price_int + (price_Arr * count_arr);
+      cartCustomer = cartCustomer + "," + count[i] + "," + name[i];
+      int priceArr = int.parse(price[i]);
+      int countArr = int.parse(count[i]);
+      price_int = price_int + (priceArr * countArr);
     }
     var now = DateTime.now();
-    print(DateFormat.yMMMMd().format(now));
-    cart_customer = cart_customer +
+    cartCustomer = cartCustomer +
         "," +
         price_int.toString() +
         ",A D D R E S S" +
         "," +
         DateFormat.yMMMMd().format(now).toString();
-    print(price_int);
-    print(cart_customer);
-    print("Payment Done");
     await FirebaseFirestore.instance
         .collection("customers")
         .doc(doc_id_)
         .get()
         .then((value) {
-      count_order = value['count'];
+      countOrder = value['count'];
     });
-    count_order = (int.parse(count_order) + 1).toString();
+    countOrder = (int.parse(countOrder) + 1).toString();
     await FirebaseFirestore.instance
         .collection("customers")
         .doc(doc_id_)
         .update({
-      'order$count_order': cart_customer,
-      'count': count_order,
+      'order$countOrder': cartCustomer,
+      'count': countOrder,
     });
     print("no of orders");
-    int no_of_orders_admin = 0;
+    int noOfOrdersAdmin = 0;
     await FirebaseFirestore.instance
         .collection("orders")
         .doc('count')
         .get()
-        .then((value) => no_of_orders_admin = (int.parse(value['count']) + 1));
+        .then((value) => noOfOrdersAdmin = (int.parse(value['count']) + 1));
     await FirebaseFirestore.instance
         .collection("orders")
-        .doc('Order_$no_of_orders_admin')
+        .doc('Order_$noOfOrdersAdmin')
         .set({
-      'details': order_admin,
+      'details': orderAdmin,
       'price': price_int,
       'customer_id': doc_id_,
-      'order_count': count_order,
-      'count': total_number_of_items,
+      'order_count': countOrder,
+      'count': totalNumberOfItems,
       'status': "1",
       'customer_name': widget.name,
       'customer_address': widget.address,
@@ -132,13 +128,13 @@ class _order_ScreenState extends State<order_Screen> {
     await FirebaseFirestore.instance
         .collection("orders")
         .doc('count')
-        .update({'count': no_of_orders_admin.toString()});
+        .update({'count': noOfOrdersAdmin.toString()});
     await FirebaseFirestore.instance
         .collection("customers")
         .doc(doc_id_)
         .update({'cart': ""});
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => MyHomePage()));
+        .push(MaterialPageRoute(builder: (context) => const MyHomePage()));
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -167,7 +163,7 @@ class _order_ScreenState extends State<order_Screen> {
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.05,
                   width: MediaQuery.of(context).size.width * 0.15,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Color.fromRGBO(136, 148, 110, 1),
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Center(
@@ -206,16 +202,16 @@ class _order_ScreenState extends State<order_Screen> {
             return SafeArea(
               child: Scaffold(
                 appBar: AppBar(
-                  backgroundColor: Color.fromRGBO(136, 148, 110, 1),
+                  backgroundColor: const Color.fromRGBO(136, 148, 110, 1),
                   toolbarHeight: MediaQuery.of(context).size.height * 0.08,
                   leading: Padding(
                     padding: const EdgeInsets.only(left: 24.0),
                     child: InkWell(
                       onTap: () async {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MyHomePage()));
+                            builder: (context) => const MyHomePage()));
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_ios_new_sharp,
                         size: 32.0,
                       ),
@@ -223,7 +219,7 @@ class _order_ScreenState extends State<order_Screen> {
                   ),
                   actions: [
                     Padding(
-                        padding: EdgeInsets.only(right: 20.0),
+                        padding: const EdgeInsets.only(right: 20.0),
                         child: GestureDetector(
                           onTap: () async {
                             await FirebaseFirestore.instance
@@ -243,29 +239,29 @@ class _order_ScreenState extends State<order_Screen> {
                                                   ))),
                                     });
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.person,
                             size: 32.0,
                           ),
                         )),
                     Padding(
-                        padding: EdgeInsets.only(right: 20.0),
+                        padding: const EdgeInsets.only(right: 20.0),
                         child: GestureDetector(
                           child: Card(
                             elevation: 5,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(150),
                             ),
-                            color: Color.fromRGBO(136, 148, 110, 1),
+                            color: const Color.fromRGBO(136, 148, 110, 1),
                             child: Container(
                               width: MediaQuery.of(context).size.width * 0.13,
                               height: MediaQuery.of(context).size.height * 0.04,
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 color: Color.fromRGBO(136, 148, 110, 1),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(70)),
                               ),
-                              child: Icon(
+                              child: const Icon(
                                 Icons.card_travel_outlined,
                                 size: 32.0,
                               ),
@@ -275,7 +271,7 @@ class _order_ScreenState extends State<order_Screen> {
                   ],
                 ),
                 body: SingleChildScrollView(
-                  physics: ScrollPhysics(),
+                  physics: const ScrollPhysics(),
                   child: Stack(
                     children: [
                       Column(
@@ -286,7 +282,7 @@ class _order_ScreenState extends State<order_Screen> {
                             child: Text(
                               'My Cart',
                               style: TextStyle(
-                                color: Color.fromRGBO(136, 148, 110, 1),
+                                color: const Color.fromRGBO(136, 148, 110, 1),
                                 fontSize:
                                     MediaQuery.of(context).size.height * 0.05,
                                 fontWeight: FontWeight.bold,
@@ -302,7 +298,7 @@ class _order_ScreenState extends State<order_Screen> {
                                 if (!snapshot.hasData) {
                                   return Column(
                                     children: [
-                                      SpinKitWave(
+                                      const SpinKitWave(
                                         color: Color.fromRGBO(136, 148, 110, 1),
                                         size: 60.0,
                                       ),
@@ -348,47 +344,46 @@ class _order_ScreenState extends State<order_Screen> {
                                     } else {
                                       cart = document['cart'];
                                       cart = cart.substring(1);
-                                      List favourites_list =
+                                      List favouritesList =
                                           (cart.split(",").toList());
                                       price.clear();
                                       name.clear();
-                                      List image_url = [];
-                                      List filter_fav = [];
+                                      List imageUrl = [];
+                                      List filterFav = [];
                                       int j = 0;
-                                      print(favourites_list);
-                                      print(favourites_list[0]);
+                                      print(favouritesList);
+                                      print(favouritesList[0]);
                                       for (int i = 0;
-                                          i < favourites_list.length;
+                                          i < favouritesList.length;
                                           i = i + j) {
                                         print(i);
                                         j = 0;
-                                        if (favourites_list[i] == "length") {
-                                          j = int.parse(
-                                                  favourites_list[i + 1]) +
+                                        if (favouritesList[i] == "length") {
+                                          j = int.parse(favouritesList[i + 1]) +
                                               2;
                                         } else {
-                                          filter_fav.add(favourites_list[i]);
+                                          filterFav.add(favouritesList[i]);
                                           j = 1;
                                         }
                                       }
                                       for (int i = 0;
-                                          i < filter_fav.length;
+                                          i < filterFav.length;
                                           i = i + 4) {
-                                        image_url.add(filter_fav[i]);
-                                        name.add(filter_fav[i + 1]);
-                                        price.add(filter_fav[i + 2]);
-                                        count.add(filter_fav[i + 3]);
+                                        imageUrl.add(filterFav[i]);
+                                        name.add(filterFav[i + 1]);
+                                        price.add(filterFav[i + 2]);
+                                        count.add(filterFav[i + 3]);
                                       }
-                                      print(filter_fav);
-                                      print(image_url);
+                                      print(filterFav);
+                                      print(imageUrl);
                                       print(name);
                                       print(price);
                                       print(count);
                                       return ListView.builder(
                                           physics:
-                                              NeverScrollableScrollPhysics(),
+                                              const NeverScrollableScrollPhysics(),
                                           shrinkWrap: true,
-                                          itemCount: image_url.length,
+                                          itemCount: imageUrl.length,
                                           scrollDirection: Axis.vertical,
                                           itemBuilder: (BuildContext, index) {
                                             // Future.delayed(Duration.zero, () async {
@@ -418,11 +413,12 @@ class _order_ScreenState extends State<order_Screen> {
                                                                   .size
                                                                   .width *
                                                               0.7,
-                                                      color: Color.fromRGBO(
-                                                          136, 148, 110, 1),
+                                                      color:
+                                                          const Color.fromRGBO(
+                                                              136, 148, 110, 1),
                                                       child: Row(
                                                         children: [
-                                                          Container(
+                                                          SizedBox(
                                                               height: MediaQuery
                                                                           .of(
                                                                               context)
@@ -436,8 +432,7 @@ class _order_ScreenState extends State<order_Screen> {
                                                                   0.35,
                                                               child:
                                                                   Image.network(
-                                                                image_url[
-                                                                    index],
+                                                                imageUrl[index],
                                                                 fit:
                                                                     BoxFit.fill,
                                                               )),
@@ -532,7 +527,7 @@ class _order_ScreenState extends State<order_Screen> {
                                 }
                                 return Column(
                                   children: [
-                                    SpinKitWave(
+                                    const SpinKitWave(
                                       color: Color.fromRGBO(136, 148, 110, 1),
                                       size: 60.0,
                                     ),
@@ -566,18 +561,19 @@ class _order_ScreenState extends State<order_Screen> {
                                       MediaQuery.of(context).size.width * 0.4,
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.black54),
-                                    color: Color.fromRGBO(136, 148, 110, 1),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(10)),
+                                    color:
+                                        const Color.fromRGBO(136, 148, 110, 1),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
                                   ),
                                   child: Center(
                                     child: InkWell(
                                       onTap: () async {
                                         for (int i = 0; i < name.length; i++) {
-                                          int price_Arr = int.parse(price[i]);
-                                          int count_arr = int.parse(count[i]);
-                                          price_int = price_int +
-                                              (price_Arr * count_arr);
+                                          int priceArr = int.parse(price[i]);
+                                          int countArr = int.parse(count[i]);
+                                          price_int =
+                                              price_int + (priceArr * countArr);
                                         }
                                         showDialog(
                                             context: context,
@@ -647,7 +643,7 @@ class _order_ScreenState extends State<order_Screen> {
                                                                   .size
                                                                   .width *
                                                               0.15,
-                                                          decoration: BoxDecoration(
+                                                          decoration: const BoxDecoration(
                                                               color: Color
                                                                   .fromRGBO(
                                                                       136,
@@ -754,13 +750,13 @@ class _order_ScreenState extends State<order_Screen> {
             width: MediaQuery.of(context).size.width * 0.1,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Color.fromRGBO(136, 148, 110, 1),
+                color: const Color.fromRGBO(136, 148, 110, 1),
               ),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(40.0),
                   bottomLeft: Radius.circular(40.0)),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.add,
               size: 18,
             ),
@@ -798,7 +794,7 @@ class _order_ScreenState extends State<order_Screen> {
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.05,
                             width: MediaQuery.of(context).size.width * 0.12,
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                                 color: Color.fromRGBO(136, 148, 110, 1),
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(10))),
@@ -831,13 +827,13 @@ class _order_ScreenState extends State<order_Screen> {
             width: MediaQuery.of(context).size.width * 0.1,
             decoration: BoxDecoration(
               border: Border.all(
-                color: Color.fromRGBO(136, 148, 110, 1),
+                color: const Color.fromRGBO(136, 148, 110, 1),
               ),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(40.0),
                   bottomRight: Radius.circular(40.0)),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.remove,
               size: 18,
             ),

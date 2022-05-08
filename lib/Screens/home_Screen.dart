@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temp1/Screens/cart_Screen.dart';
 import 'package:temp1/Screens/order_DetailsScreen.dart';
@@ -7,6 +6,8 @@ import 'package:temp1/Screens/product_DetailsScreen.dart';
 import 'package:temp1/Screens/profile_DetailsScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:temp1/utility/common_function.dart';
+
+import 'info.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -57,9 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 24.0),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const HelpSupport()));
+                        },
                         child: const Icon(
-                          Icons.menu,
+                          Icons.info,
                           size: 32.0,
                         ),
                       ),

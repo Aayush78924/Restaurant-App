@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temp1/Screens/admin_Screens/admin_AddnewProduct.dart';
 import 'package:temp1/Screens/admin_Screens/admin_orderDetailsScreen.dart';
 import 'package:temp1/Screens/admin_Screens/admin_productsDetailsScreen.dart';
-import 'package:temp1/Screens/product_DetailsScreen.dart';
 
 class admin_OrderScreen extends StatefulWidget {
   final bool return_;
@@ -24,7 +23,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color.fromRGBO(136, 148, 110, 1),
+          backgroundColor: const Color.fromRGBO(136, 148, 110, 1),
           toolbarHeight: MediaQuery.of(context).size.height * 0.08,
           title: Text(
             'health_do'.toUpperCase(),
@@ -43,9 +42,9 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(150),
                 ),
-                color: Color.fromRGBO(136, 148, 110, 1),
+                color: const Color.fromRGBO(136, 148, 110, 1),
                 child: Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
@@ -53,7 +52,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                   count: count_of_menufood_in_FB.toString(),
                                 )));
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.add,
                         size: 32.0,
                       ),
@@ -63,7 +62,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
           ],
         ),
         body: SingleChildScrollView(
-          physics: ScrollPhysics(),
+          physics: const ScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -86,12 +85,12 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                         width: MediaQuery.of(context).size.width * 0.34,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color.fromRGBO(136, 148, 110, 1),
+                            color: const Color.fromRGBO(136, 148, 110, 1),
                           ),
                           color: order
-                              ? Color.fromRGBO(136, 148, 110, 1)
-                              : Color.fromRGBO(136, 148, 110, 0.3),
-                          borderRadius: BorderRadius.only(
+                              ? const Color.fromRGBO(136, 148, 110, 1)
+                              : const Color.fromRGBO(136, 148, 110, 0.3),
+                          borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(40.0),
                               bottomLeft: Radius.circular(40.0)),
                         ),
@@ -125,13 +124,13 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                         width: MediaQuery.of(context).size.width * 0.34,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color.fromRGBO(136, 148, 110, 1),
+                            color: const Color.fromRGBO(136, 148, 110, 1),
                           ),
                           // color: Color.fromRGBO(136, 148, 110, 1),
                           color: order
-                              ? Color.fromRGBO(136, 148, 110, 0.3)
-                              : Color.fromRGBO(136, 148, 110, 1),
-                          borderRadius: BorderRadius.only(
+                              ? const Color.fromRGBO(136, 148, 110, 0.3)
+                              : const Color.fromRGBO(136, 148, 110, 1),
+                          borderRadius: const BorderRadius.only(
                               topRight: Radius.circular(40.0),
                               bottomRight: Radius.circular(40.0)),
                         ),
@@ -163,7 +162,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                         if (!snapshot.hasData) {
                           return Column(
                             children: [
-                              SpinKitWave(
+                              const SpinKitWave(
                                 color: Color.fromRGBO(136, 148, 110, 1),
                                 size: 60.0,
                               ),
@@ -187,12 +186,12 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                         if (snapshot.connectionState ==
                             ConnectionState.active) {
                           if (document != null) {
-                            int reverse_int = ((snapshot.data! as QuerySnapshot)
+                            int reverseInt = ((snapshot.data! as QuerySnapshot)
                                     .docs
                                     .length) -
                                 2;
                             return ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: ((snapshot.data! as QuerySnapshot)
                                         .docs
@@ -202,16 +201,16 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                 itemBuilder: (BuildContext, index) {
                                   DocumentSnapshot products =
                                       (snapshot.data! as QuerySnapshot)
-                                          .docs[reverse_int];
-                                  reverse_int = reverse_int - 1;
+                                          .docs[reverseInt];
+                                  reverseInt = reverseInt - 1;
                                   String date = products['date'];
-                                  List date_list = date.split(",").toList();
-                                  date = date_list[0];
-                                  date_list.clear();
-                                  date_list = date.split(" ").toList();
+                                  List dateList = date.split(",").toList();
+                                  date = dateList[0];
+                                  dateList.clear();
+                                  dateList = date.split(" ").toList();
                                   return InkWell(
                                     onTap: () async {
-                                      int selected_index =
+                                      int selectedIndex =
                                           ((snapshot.data! as QuerySnapshot)
                                                   .docs
                                                   .length) -
@@ -249,7 +248,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                     customer_id:
                                                         products['customer_id']
                                                             .toString(),
-                                                    order_Index: selected_index
+                                                    order_Index: selectedIndex
                                                         .toString(),
                                                   )));
                                     },
@@ -271,7 +270,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                     .size
                                                     .width *
                                                 0.7,
-                                            color: Color.fromRGBO(
+                                            color: const Color.fromRGBO(
                                                 136, 148, 110, 1),
                                             child: Row(
                                               children: [
@@ -299,7 +298,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                               .spaceEvenly,
                                                       children: [
                                                         Text(
-                                                          date_list[0],
+                                                          dateList[0],
                                                           style: TextStyle(
                                                             overflow:
                                                                 TextOverflow
@@ -314,9 +313,8 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                           ),
                                                         ),
                                                         Text(
-                                                          date_list[1]
-                                                              .toString()
-                                                              .substring(0, 2),
+                                                          dateList[1]
+                                                              .toString(),
                                                           style: TextStyle(
                                                             overflow:
                                                                 TextOverflow
@@ -325,7 +323,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                         context)
                                                                     .size
                                                                     .height *
-                                                                0.07,
+                                                                0.04,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
@@ -383,7 +381,9 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                 "Name : "),
                                                             value_widget_menu(
                                                                 context,
-                                                                "${products['customer_name'].toString()}"),
+                                                                products[
+                                                                        'customer_name']
+                                                                    .toString()),
                                                           ],
                                                         ),
                                                         Row(
@@ -399,7 +399,9 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                 "Items Count : "),
                                                             value_widget_menu(
                                                                 context,
-                                                                "${products['count'].toString()}"),
+                                                                products[
+                                                                        'count']
+                                                                    .toString()),
                                                           ],
                                                         ),
                                                       ],
@@ -417,7 +419,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
 
                         return Column(
                           children: [
-                            SpinKitWave(
+                            const SpinKitWave(
                               color: Color.fromRGBO(136, 148, 110, 1),
                               size: 60.0,
                             ),
@@ -447,7 +449,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                         if (!snapshot.hasData) {
                           return Column(
                             children: [
-                              SpinKitWave(
+                              const SpinKitWave(
                                 color: Color.fromRGBO(136, 148, 110, 1),
                                 size: 60.0,
                               ),
@@ -475,7 +477,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                 (snapshot.data! as QuerySnapshot).docs.length +
                                     1;
                             return ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: (snapshot.data! as QuerySnapshot)
                                     .docs
@@ -505,7 +507,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                     .size
                                                     .width *
                                                 0.7,
-                                            color: Color.fromRGBO(
+                                            color: const Color.fromRGBO(
                                                 136, 148, 110, 1),
                                             child: Row(
                                               children: [
@@ -532,7 +534,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                         (snapshot.data!
                                                                 as QuerySnapshot)
                                                             .docs[index];
-                                                    String doc_id = '';
+                                                    String docId = '';
                                                     await FirebaseFirestore
                                                         .instance
                                                         .collection("menu_list")
@@ -548,7 +550,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                   products[
                                                                           'name']
                                                                       .toString()) {
-                                                                doc_id =
+                                                                docId =
                                                                     DocumentSnapshot
                                                                         .id;
                                                               }
@@ -558,7 +560,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                             .getInstance();
                                                     prefs.setString(
                                                         'product_doc_id',
-                                                        doc_id);
+                                                        docId);
                                                     Navigator.of(context).push(
                                                         MaterialPageRoute(
                                                             builder: (context) =>
@@ -588,8 +590,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                       'price'],
                                                                   protein: products[
                                                                       'protein'],
-                                                                  doc_id:
-                                                                      doc_id,
+                                                                  doc_id: docId,
                                                                 )));
                                                   },
                                                   child: Container(
@@ -645,7 +646,10 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                   "Name : "),
                                                               value_widget_menu(
                                                                   context,
-                                                                  "${products['name'].toString().toUpperCase()}"),
+                                                                  products[
+                                                                          'name']
+                                                                      .toString()
+                                                                      .toUpperCase()),
                                                             ],
                                                           ),
                                                           Row(
@@ -661,7 +665,9 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
                                                                   "Ingredients : "),
                                                               value_widget_menu(
                                                                   context,
-                                                                  "${products['ingredients'].toString()}"),
+                                                                  products[
+                                                                          'ingredients']
+                                                                      .toString()),
                                                             ],
                                                           ),
                                                         ],
@@ -680,7 +686,7 @@ class _admin_OrderScreenState extends State<admin_OrderScreen> {
 
                         return Column(
                           children: [
-                            SpinKitWave(
+                            const SpinKitWave(
                               color: Color.fromRGBO(136, 148, 110, 1),
                               size: 60.0,
                             ),
