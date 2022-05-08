@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temp1/Screens/admin_Screens/admin_orderDetailsScreen.dart';
-import 'package:temp1/Screens/admin_Screens/admin_homeScreen.dart';
 import 'package:temp1/Screens/home_Screen.dart';
 import 'package:temp1/Screens/loading_screen.dart';
 import 'package:temp1/Screens/login_Screen.dart';
-import 'package:temp1/Screens/cart_Screen.dart';
-import 'package:temp1/Screens/order_DetailsScreen.dart';
-import 'package:temp1/Screens/otp_Screen.dart';
-import 'package:temp1/Screens/product_DetailsScreen.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +13,11 @@ Future main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -61,12 +57,12 @@ class _launcher_ScreenState extends State<launcher_Screen> {
         future: landingPageDecider(),
         builder: (context, AsyncSnapshot<List> snapshot) {
           if (snapshot.hasData) {
-            if (snapshot.data![0] == 'home') return MyHomePage();
-            if (snapshot.data![0] == 'login') return login_Screen();
+            if (snapshot.data![0] == 'home') return const MyHomePage();
+            if (snapshot.data![0] == 'login') return const login_Screen();
           } else {
-            return loading_Screen();
+            return const loading_Screen();
           }
-          return loading_Screen();
+          return const loading_Screen();
         });
 
     //for admin screen module

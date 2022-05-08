@@ -6,6 +6,7 @@ import 'package:temp1/Screens/order_DetailsScreen.dart';
 import 'package:temp1/Screens/product_DetailsScreen.dart';
 import 'package:temp1/Screens/profile_DetailsScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:temp1/utility/common_function.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -36,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    var vertical_Divider = Container(
+    var verticalDivider = Container(
       height: MediaQuery.of(context).size.height * 0.03,
       width: MediaQuery.of(context).size.width * 0.008,
       decoration: BoxDecoration(
@@ -51,13 +52,13 @@ class _MyHomePageState extends State<MyHomePage> {
             return SafeArea(
               child: Scaffold(
                   appBar: AppBar(
-                    backgroundColor: Color.fromRGBO(136, 148, 110, 1),
+                    backgroundColor: const Color.fromRGBO(136, 148, 110, 1),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.08,
                     leading: Padding(
                       padding: const EdgeInsets.only(left: 24.0),
                       child: InkWell(
                         onTap: () {},
-                        child: Icon(
+                        child: const Icon(
                           Icons.menu,
                           size: 32.0,
                         ),
@@ -65,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     actions: [
                       Padding(
-                          padding: EdgeInsets.only(right: 20.0),
+                          padding: const EdgeInsets.only(right: 20.0),
                           child: GestureDetector(
                             onTap: () async {
                               await FirebaseFirestore.instance
@@ -85,13 +86,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     ))),
                                       });
                             },
-                            child: Icon(
+                            child: const Icon(
                               Icons.person,
                               size: 32.0,
                             ),
                           )),
                       Padding(
-                          padding: EdgeInsets.only(right: 20.0),
+                          padding: const EdgeInsets.only(right: 20.0),
                           child: GestureDetector(
                             onTap: () async {
                               await FirebaseFirestore.instance
@@ -109,9 +110,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       address: value['address'],
                                                     ))),
                                       });
+
+                              showToast("Order can placed with 5km radius ");
                             },
-                            child: Icon(
-                              Icons.card_travel_outlined,
+                            child: const Icon(
+                              Icons.shopping_cart,
                               size: 32.0,
                             ),
                           )),
@@ -125,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Container(
                         height: MediaQuery.of(context).size.height * 0.2,
                         child: Image.asset("assets/logo.jpeg"),
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             borderRadius: BorderRadius.only(
                                 bottomLeft: Radius.circular(100),
                                 bottomRight: Radius.circular(100))),
@@ -134,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Container(
                         height: MediaQuery.of(context).size.height * 0.3,
                         // color: Colors.teal,
-                        color: Color.fromRGBO(226, 236, 214, 0.3),
+                        color: const Color.fromRGBO(226, 236, 214, 0.3),
                         child: Center(
                           child: StreamBuilder<DocumentSnapshot>(
                               stream: FirebaseFirestore.instance
@@ -158,9 +161,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                 if (snapshot.connectionState ==
                                     ConnectionState.active) {
                                   if (document != null) {
-                                    int no_of_orders =
+                                    int noOfOrders =
                                         int.parse(document['count']);
-                                    if (no_of_orders == 0) {
+                                    if (noOfOrders == 0) {
                                       return Padding(
                                         padding: const EdgeInsets.all(16.0),
                                         child: Text(
@@ -178,46 +181,46 @@ class _MyHomePageState extends State<MyHomePage> {
                                       );
                                     }
                                     return ListView.builder(
-                                        itemCount: no_of_orders,
+                                        itemCount: noOfOrders,
                                         scrollDirection: Axis.horizontal,
                                         itemBuilder: (BuildContext, index) {
                                           //remove
-                                          String order_number_str =
+                                          String orderNumberStr =
                                               "order" + (index + 1).toString();
-                                          print(order_number_str);
+                                          print(orderNumberStr);
                                           String order =
-                                              document[order_number_str];
-                                          List order_details =
+                                              document[orderNumberStr];
+                                          List orderDetails =
                                               order.split(",").toList();
-                                          String date = order_details[
-                                              order_details.length - 1];
-                                          order_details.removeLast();
-                                          date = order_details[
-                                                  order_details.length - 1] +
+                                          String date = orderDetails[
+                                              orderDetails.length - 1];
+                                          orderDetails.removeLast();
+                                          date = orderDetails[
+                                                  orderDetails.length - 1] +
                                               ", " +
                                               date;
-                                          order_details.removeLast();
-                                          String address = order_details[
-                                              order_details.length - 1];
-                                          order_details.removeLast();
-                                          String total_amount = order_details[
-                                              order_details.length - 1];
-                                          order_details.removeLast();
-                                          String status = order_details[0];
-                                          order_details.removeAt(0);
-                                          String item_count = order_details[0];
-                                          order_details.removeAt(0);
-                                          print(order_details);
+                                          orderDetails.removeLast();
+                                          String address = orderDetails[
+                                              orderDetails.length - 1];
+                                          orderDetails.removeLast();
+                                          String totalAmount = orderDetails[
+                                              orderDetails.length - 1];
+                                          orderDetails.removeLast();
+                                          String status = orderDetails[0];
+                                          orderDetails.removeAt(0);
+                                          String itemCount = orderDetails[0];
+                                          orderDetails.removeAt(0);
+                                          print(orderDetails);
                                           String item = "";
                                           for (int i = 0;
-                                              i < order_details.length;
+                                              i < orderDetails.length;
                                               i++) {
                                             if (i % 2 == 0) {
                                               item =
-                                                  item + "," + order_details[i];
+                                                  item + "," + orderDetails[i];
                                             } else {
                                               item =
-                                                  item + " " + order_details[i];
+                                                  item + " " + orderDetails[i];
                                             }
                                           }
                                           item = item.substring(1);
@@ -246,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       builder: (context) =>
                                                           order_Details(
                                                             address: address,
-                                                            price: total_amount,
+                                                            price: totalAmount,
                                                             status: status,
                                                             // status: "2",
                                                             name: item,
@@ -272,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           .size
                                                           .width *
                                                       0.7,
-                                                  color: Color.fromRGBO(
+                                                  color: const Color.fromRGBO(
                                                       136, 148, 110, 1),
                                                   child: Padding(
                                                     padding:
@@ -313,16 +316,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                   .spaceAround,
                                                           children: [
                                                             Text(
-                                                                'Count : $item_count',
+                                                                'Count : $itemCount',
                                                                 style:
                                                                     textStyle),
-                                                            vertical_Divider,
+                                                            verticalDivider,
                                                             Text(
                                                               date,
                                                               style: textStyle,
                                                             ),
-                                                            vertical_Divider,
-                                                            Text(total_amount,
+                                                            verticalDivider,
+                                                            Text(totalAmount,
                                                                 style:
                                                                     textStyle),
                                                           ],
@@ -357,10 +360,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                   'Info & order',
                                                                   style:
                                                                       textStyle2),
-                                                              Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
+                                                              const Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
                                                                         right:
                                                                             8.0),
                                                                 child: InkWell(
@@ -403,7 +405,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       Container(
                         height: MediaQuery.of(context).size.height * 0.3,
                         // color: Colors.teal,
-                        color: Color.fromRGBO(226, 236, 214, 0.3),
+                        color: const Color.fromRGBO(226, 236, 214, 0.3),
                         child: Center(
                           child: StreamBuilder<DocumentSnapshot>(
                               stream: FirebaseFirestore.instance
@@ -468,12 +470,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 String carbs = '';
                                                 String dressing = '';
                                                 String fats = '';
-                                                String image_url = '';
+                                                String imageUrl = '';
                                                 String ingredients = '';
                                                 String name = '';
                                                 String price = '';
                                                 String protein = '';
-                                                int index_in_firebase = 0;
+                                                int indexInFirebase = 0;
                                                 await FirebaseFirestore.instance
                                                     .collection("menu_list")
                                                     .get()
@@ -486,7 +488,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                       'name') ==
                                                               favourite_list[
                                                                   index]) {
-                                                            index_in_firebase =
+                                                            indexInFirebase =
                                                                 index;
                                                             caloies =
                                                                 DocumentSnapshot
@@ -504,7 +506,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                 DocumentSnapshot
                                                                     .get(
                                                                         'fats');
-                                                            image_url =
+                                                            imageUrl =
                                                                 DocumentSnapshot
                                                                     .get(
                                                                         'image_url');
@@ -536,7 +538,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                   dressing,
                                                               fats: fats,
                                                               image_url:
-                                                                  image_url,
+                                                                  imageUrl,
                                                               ingredients:
                                                                   ingredients,
                                                               name: name,
@@ -561,7 +563,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           .size
                                                           .width *
                                                       0.7,
-                                                  color: Color.fromRGBO(
+                                                  color: const Color.fromRGBO(
                                                       226, 236, 214, 0.3),
                                                   child: Stack(
                                                     children: [
@@ -570,7 +572,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                             .bottomCenter,
                                                         child: Container(
                                                           decoration:
-                                                              BoxDecoration(
+                                                              const BoxDecoration(
                                                             color:
                                                                 Color.fromRGBO(
                                                                     136,
@@ -625,11 +627,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                   ),
                                                                 ),
                                                               ),
-                                                              Padding(
-                                                                  padding: const EdgeInsets
-                                                                          .only(
-                                                                      right:
-                                                                          16),
+                                                              const Padding(
+                                                                  padding: EdgeInsets
+                                                                      .only(
+                                                                          right:
+                                                                              16),
                                                                   child: Icon(
                                                                     Icons
                                                                         .favorite,
@@ -690,7 +692,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold,
-                                                                      color: Color.fromRGBO(
+                                                                      color: const Color
+                                                                              .fromRGBO(
                                                                           136,
                                                                           148,
                                                                           110,
@@ -752,14 +755,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                     "customers")
                                                                 .doc(doc_id_)
                                                                 .update({
-                                                              'favourite':
-                                                                  name.length !=
-                                                                          0
-                                                                      ? name
-                                                                          .substring(
-                                                                          1,
-                                                                        )
-                                                                      : name
+                                                              'favourite': name
+                                                                      .isNotEmpty
+                                                                  ? name
+                                                                      .substring(
+                                                                      1,
+                                                                    )
+                                                                  : name
                                                             });
                                                             setState(() {});
                                                           },
@@ -784,12 +786,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                                                           .favorite_outline_rounded
                                                                       : Icons
                                                                           .favorite,
-                                                                  color: Color
-                                                                      .fromRGBO(
-                                                                          136,
-                                                                          148,
-                                                                          110,
-                                                                          1),
+                                                                  color: const Color
+                                                                          .fromRGBO(
+                                                                      136,
+                                                                      148,
+                                                                      110,
+                                                                      1),
                                                                 )),
                                                           ),
                                                         ),
@@ -847,18 +849,18 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  Container image_Widget(BuildContext context, int no_Of_Element) {
+  Container image_Widget(BuildContext context, int noOfElement) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.3,
       // color: Colors.teal,
-      color: Color.fromRGBO(226, 236, 214, 0.3),
+      color: const Color.fromRGBO(226, 236, 214, 0.3),
       child: Center(
         child: StreamBuilder<Object>(
             stream:
                 FirebaseFirestore.instance.collection('menu_list').snapshots(),
             builder: (context, snapshot) {
               return !snapshot.hasData
-                  ? Text('PLease Wait')
+                  ? const Text('PLease Wait')
                   : ListView.builder(
                       itemCount: (snapshot.data! as QuerySnapshot).docs.length,
                       scrollDirection: Axis.horizontal,
@@ -895,13 +897,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.25,
                                 width: MediaQuery.of(context).size.width * 0.7,
-                                color: Color.fromRGBO(226, 236, 214, 0.3),
+                                color: const Color.fromRGBO(226, 236, 214, 0.3),
                                 child: Stack(
                                   children: [
                                     Align(
                                       alignment: Alignment.bottomCenter,
                                       child: Container(
-                                        decoration: BoxDecoration(
+                                        decoration: const BoxDecoration(
                                           color:
                                               Color.fromRGBO(136, 148, 110, 1),
                                           borderRadius: BorderRadius.only(
@@ -938,9 +940,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 ),
                                               ),
                                             ),
-                                            Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 16),
+                                            const Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 16),
                                                 child: Icon(
                                                   Icons.favorite,
                                                   size: 32,
@@ -982,7 +984,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 'Rs.',
                                                 style: TextStyle(
                                                     fontWeight: FontWeight.bold,
-                                                    color: Color.fromRGBO(
+                                                    color: const Color.fromRGBO(
                                                         136, 148, 110, 1),
                                                     fontSize:
                                                         MediaQuery.of(context)
@@ -1065,7 +1067,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                     ? Icons.favorite
                                                     : Icons
                                                         .favorite_outline_rounded,
-                                                color: Color.fromRGBO(
+                                                color: const Color.fromRGBO(
                                                     136, 148, 110, 1),
                                               )),
                                         ),
@@ -1083,25 +1085,25 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Padding title_Widget(BuildContext context, String title, bool other_food) {
+  Padding title_Widget(BuildContext context, String title, bool otherFood) {
     return Padding(
       padding: const EdgeInsets.only(top: 16.0, bottom: 16.0, left: 32.0),
-      child: Container(
+      child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.03,
           child: Row(
             children: [
-              other_food
+              otherFood
                   ? Text(
                       'MY',
                       style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.03,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(136, 148, 110, 1),
+                        color: const Color.fromRGBO(136, 148, 110, 1),
                       ),
                     )
                   : Container(),
               Text(
-                '$title',
+                title,
                 style: TextStyle(
                   fontSize: MediaQuery.of(context).size.height * 0.03,
                   fontWeight: FontWeight.bold,

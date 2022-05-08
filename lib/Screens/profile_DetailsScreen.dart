@@ -27,17 +27,17 @@ class _profile_ProductState extends State<profile_Product> {
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(136, 148, 110, 1),
+        backgroundColor: const Color.fromRGBO(136, 148, 110, 1),
         toolbarHeight: MediaQuery.of(context).size.height * 0.08,
         leading: Padding(
           padding: const EdgeInsets.only(left: 24.0),
           child: InkWell(
             onTap: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => MyHomePage()));
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const MyHomePage()));
             },
-            child: Icon(
+            child: const Icon(
               Icons.arrow_back_ios_new_sharp,
               size: 32.0,
             ),
@@ -45,22 +45,22 @@ class _profile_ProductState extends State<profile_Product> {
         ),
         actions: [
           Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 child: Card(
                   elevation: 5,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(150),
                   ),
-                  color: Color.fromRGBO(136, 148, 110, 1),
+                  color: const Color.fromRGBO(136, 148, 110, 1),
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.13,
                     height: MediaQuery.of(context).size.height * 0.04,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Color.fromRGBO(136, 148, 110, 1),
                       borderRadius: BorderRadius.all(Radius.circular(70)),
                     ),
-                    child: Icon(
+                    child: const Icon(
                       Icons.person,
                       size: 32.0,
                     ),
@@ -68,7 +68,7 @@ class _profile_ProductState extends State<profile_Product> {
                 ),
               )),
           Padding(
-              padding: EdgeInsets.only(right: 20.0),
+              padding: const EdgeInsets.only(right: 20.0),
               child: GestureDetector(
                 onTap: () async {
                   await FirebaseFirestore.instance
@@ -84,14 +84,14 @@ class _profile_ProductState extends State<profile_Product> {
                                     ))),
                           });
                 },
-                child: Icon(
+                child: const Icon(
                   Icons.card_travel_outlined,
                   size: 32.0,
                 ),
               )),
         ],
       ),
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: Stack(
@@ -100,7 +100,7 @@ class _profile_ProductState extends State<profile_Product> {
               alignment: Alignment.topCenter,
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.3,
-                color: Color.fromRGBO(136, 148, 110, 1),
+                color: const Color.fromRGBO(136, 148, 110, 1),
               ),
             ),
             Align(
@@ -116,7 +116,7 @@ class _profile_ProductState extends State<profile_Product> {
             Align(
               heightFactor: 4.6,
               alignment: Alignment.bottomCenter,
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height * 0.12,
                 width: double.infinity,
                 child: Column(
@@ -142,47 +142,48 @@ class _profile_ProductState extends State<profile_Product> {
                 ),
               ),
             ),
-            Align(
-                heightFactor: 25,
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 32.0),
-                  child: Text(
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.15,
+              left: MediaQuery.of(context).size.width * 0.1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
                     'Address',
                     style: TextStyle(
                         fontSize: MediaQuery.of(context).size.height * 0.025,
                         color: Colors.black,
                         fontWeight: FontWeight.bold),
                   ),
-                )),
-            Align(
-              heightFactor: 5.8,
-              alignment: Alignment.bottomCenter,
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                child: Container(
-                    height: MediaQuery.of(context).size.height * 0.12,
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(16))),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          widget.address,
-                          style: TextStyle(
-                              fontSize:
-                                  MediaQuery.of(context).size.height * 0.025,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )),
+                  Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Container(
+                        height: MediaQuery.of(context).size.height * 0.12,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(16))),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              widget.address,
+                              style: TextStyle(
+                                  fontSize: MediaQuery.of(context).size.height *
+                                      0.025,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        )),
+                  )
+                ],
               ),
             )
           ],

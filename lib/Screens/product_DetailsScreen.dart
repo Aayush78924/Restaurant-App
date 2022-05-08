@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temp1/Screens/home_Screen.dart';
-import 'package:temp1/Screens/order_DetailsScreen.dart';
 
 class product_Details extends StatefulWidget {
   final String caloies;
@@ -59,7 +58,7 @@ class _product_DetailsState extends State<product_Details> {
     for (int i = 0; i < ingredient_add.length; i++) {
       ingredients.add(ingredient_add[i]);
     }
-    TextEditingController _textFieldController = new TextEditingController();
+    TextEditingController _textFieldController = TextEditingController();
     bool empty = false;
     return FutureBuilder(
         future: getSharedPrefs(),
@@ -68,17 +67,17 @@ class _product_DetailsState extends State<product_Details> {
             return SafeArea(
               child: Scaffold(
                   appBar: AppBar(
-                    backgroundColor: Color.fromRGBO(136, 148, 110, 1),
+                    backgroundColor: const Color.fromRGBO(136, 148, 110, 1),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.08,
                     leading: InkWell(
                       onTap: () async {
                         SharedPreferences prefs =
                             await SharedPreferences.getInstance();
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MyHomePage()));
+                            builder: (context) => const MyHomePage()));
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.all(24.0),
+                      child: const Padding(
+                        padding: EdgeInsets.all(24.0),
                         child: Icon(
                           Icons.arrow_back_ios_new_sharp,
                           size: 32.0,
@@ -87,14 +86,14 @@ class _product_DetailsState extends State<product_Details> {
                     ),
                   ),
                   body: SingleChildScrollView(
-                    physics: ScrollPhysics(),
+                    physics: const ScrollPhysics(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.05,
                         ),
-                        Container(
+                        SizedBox(
                           height: MediaQuery.of(context).size.height * 0.35,
                           width: MediaQuery.of(context).size.width,
                           //color: Colors.indigo,
@@ -102,7 +101,8 @@ class _product_DetailsState extends State<product_Details> {
                             padding: const EdgeInsets.all(16.0),
                             child: CircleAvatar(
                               radius: MediaQuery.of(context).size.width * 0.2,
-                              backgroundColor: Color.fromRGBO(136, 148, 110, 1),
+                              backgroundColor:
+                                  const Color.fromRGBO(136, 148, 110, 1),
                               child: CircleAvatar(
                                 radius: MediaQuery.of(context).size.width * 0.3,
                                 backgroundColor: Colors.white,
@@ -111,7 +111,7 @@ class _product_DetailsState extends State<product_Details> {
                             ),
                           ),
                         ),
-                        Container(
+                        SizedBox(
                             width: MediaQuery.of(context).size.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +125,8 @@ class _product_DetailsState extends State<product_Details> {
                                         fontSize:
                                             MediaQuery.of(context).size.height *
                                                 0.04,
-                                        color: Color.fromRGBO(136, 148, 110, 1),
+                                        color: const Color.fromRGBO(
+                                            136, 148, 110, 1),
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
@@ -161,60 +162,36 @@ class _product_DetailsState extends State<product_Details> {
                               ],
                             )),
                         Padding(
-                          padding: const EdgeInsets.only(top: 32.0, left: 32.0),
-                          child: Text(
-                            'Ingredients',
-                            style: TextStyle(
-                                fontSize:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                color: Color.fromRGBO(136, 148, 110, 1),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: ingredients.length,
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (BuildContext, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 64.0, top: 16.0, bottom: 16.0),
-                                child: Container(
-                                  alignment: Alignment.centerLeft,
-                                  //color: Color.fromRGBO(136, 148, 110, 1),
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius:
-                                            MediaQuery.of(context).size.width *
-                                                0.01,
-                                        backgroundColor:
-                                            Color.fromRGBO(136, 148, 110, 1),
-                                      ),
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.02,
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          '${ingredients[index]}',
-                                          style: TextStyle(
-                                              overflow: TextOverflow.visible,
-                                              fontSize: MediaQuery.of(context)
-                                                      .size
-                                                      .height *
-                                                  0.025,
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w500),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                          padding: const EdgeInsets.only(
+                              right: 32, top: 16.0, bottom: 8.0, left: 32.0),
+                          child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'Ingredients',
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.05,
+                                      color: const Color.fromRGBO(
+                                          136, 148, 110, 1),
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              );
-                            }),
+                                GestureDetector(
+                                  onTap: () {
+                                    showAddDialog(context, ingredients);
+                                  },
+                                  child: Icon(
+                                    Icons.add_circle_outline_outlined,
+                                    color:
+                                        const Color.fromRGBO(136, 148, 110, 1),
+                                    size: MediaQuery.of(context).size.height *
+                                        0.05,
+                                  ),
+                                )
+                              ]),
+                        ),
                         Row(
                           children: [
                             title_Style(context, "Calories :"),
@@ -259,160 +236,6 @@ class _product_DetailsState extends State<product_Details> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.05,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.black),
-                                      color: Color.fromRGBO(136, 148, 110, 1),
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30))),
-                                  child: Center(
-                                    child: InkWell(
-                                      onTap: () {
-                                        showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return AlertDialog(
-                                                title: Text('Add Ingredient'),
-                                                content: TextField(
-                                                  controller:
-                                                      _textFieldController,
-                                                  decoration: InputDecoration(
-                                                      hintStyle: TextStyle(
-                                                          color: !empty
-                                                              ? Colors.black
-                                                              : Colors.red),
-                                                      hintText:
-                                                          "Enter the ingredient here"),
-                                                ),
-                                                actions: <Widget>[
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.05,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.16,
-                                                      decoration: BoxDecoration(
-                                                          color: Color.fromRGBO(
-                                                              136, 148, 110, 1),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10))),
-                                                      child: Center(
-                                                        child: InkWell(
-                                                          onTap: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                            setState(() {});
-                                                          },
-                                                          child: Text(
-                                                            'Cancel',
-                                                            style: TextStyle(
-                                                                fontSize: MediaQuery
-                                                                            .of(
-                                                                                context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.025,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Container(
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height *
-                                                              0.05,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width *
-                                                              0.12,
-                                                      decoration: BoxDecoration(
-                                                          color: Color.fromRGBO(
-                                                              136, 148, 110, 1),
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          10))),
-                                                      child: Center(
-                                                        child: InkWell(
-                                                          onTap: () async {
-                                                            if (_textFieldController
-                                                                .text.isEmpty) {
-                                                              empty = true;
-                                                              setState(() {});
-                                                            } else {
-                                                              empty = false;
-                                                              Navigator.pop(
-                                                                  context);
-                                                              _addItem(
-                                                                  _textFieldController
-                                                                      .text);
-                                                            }
-                                                          },
-                                                          child: Text(
-                                                            'Add',
-                                                            style: TextStyle(
-                                                                fontSize: MediaQuery
-                                                                            .of(
-                                                                                context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.025,
-                                                                color: Colors
-                                                                    .white,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            });
-                                      },
-                                      child: Text(
-                                        'Modify',
-                                        style: TextStyle(
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.025,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                ),
                                 SizedBox(
                                   width:
                                       MediaQuery.of(context).size.width * 0.07,
@@ -424,9 +247,10 @@ class _product_DetailsState extends State<product_Details> {
                                       MediaQuery.of(context).size.width * 0.4,
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.black),
-                                    color: Color.fromRGBO(136, 148, 110, 1),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(30)),
+                                    color:
+                                        const Color.fromRGBO(136, 148, 110, 1),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30)),
                                   ),
                                   child: Center(
                                     child: InkWell(
@@ -475,7 +299,7 @@ class _product_DetailsState extends State<product_Details> {
                                                                   .size
                                                                   .width *
                                                               0.16,
-                                                      decoration: BoxDecoration(
+                                                      decoration: const BoxDecoration(
                                                           color: Color.fromRGBO(
                                                               136, 148, 110, 1),
                                                           borderRadius:
@@ -524,7 +348,7 @@ class _product_DetailsState extends State<product_Details> {
                                                                   .size
                                                                   .width *
                                                               0.12,
-                                                      decoration: BoxDecoration(
+                                                      decoration: const BoxDecoration(
                                                           color: Color.fromRGBO(
                                                               136, 148, 110, 1),
                                                           borderRadius:
@@ -536,7 +360,7 @@ class _product_DetailsState extends State<product_Details> {
                                                         child: InkWell(
                                                           onTap: () async {
                                                             String
-                                                                modify_ingredients =
+                                                                modifyIngredients =
                                                                 ingredients[0];
 
                                                             for (int i = 1;
@@ -544,8 +368,8 @@ class _product_DetailsState extends State<product_Details> {
                                                                     ingredients
                                                                         .length;
                                                                 i++) {
-                                                              modify_ingredients =
-                                                                  modify_ingredients +
+                                                              modifyIngredients =
+                                                                  modifyIngredients +
                                                                       "," +
                                                                       ingredients[
                                                                           i];
@@ -580,7 +404,7 @@ class _product_DetailsState extends State<product_Details> {
                                                                           .length)
                                                                       .toString() +
                                                                   "," +
-                                                                  modify_ingredients
+                                                                  modifyIngredients
                                                             });
                                                             Navigator.pop(
                                                                 context);
@@ -654,9 +478,64 @@ class _product_DetailsState extends State<product_Details> {
         title,
         style: TextStyle(
             fontSize: MediaQuery.of(context).size.height * 0.03,
-            color: Color.fromRGBO(136, 148, 110, 1),
+            color: const Color.fromRGBO(136, 148, 110, 1),
             fontWeight: FontWeight.bold),
       ),
     );
   }
+}
+
+Future<dynamic> showAddDialog(BuildContext context, List<String> ingredients) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          width: MediaQuery.of(context).size.width * 0.8,
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: Colors.white),
+          child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: ingredients.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(
+                      left: 64.0, top: 16.0, bottom: 16.0),
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    //color: Color.fromRGBO(136, 148, 110, 1),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: MediaQuery.of(context).size.width * 0.01,
+                          backgroundColor:
+                              const Color.fromRGBO(136, 148, 110, 1),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.02,
+                        ),
+                        Flexible(
+                          child: Text(
+                            ingredients[index],
+                            style: TextStyle(
+                                overflow: TextOverflow.visible,
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.025,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
+      );
+    },
+  );
 }
